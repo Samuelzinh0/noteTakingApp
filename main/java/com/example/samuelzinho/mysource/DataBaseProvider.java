@@ -11,7 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 /**
- * Created by Tim on 11/6/2017.
+ * DataBaseProvider class will inherit from content provider.
+ * The content provider will share data between main activity
+ * and SQLiteDatabase.
+ * @author Tim Whitlock
+ * @version 1.0
+ * @since 11/6/2017
  */
 
 public class DataBaseProvider extends ContentProvider {
@@ -33,26 +38,48 @@ public class DataBaseProvider extends ContentProvider {
 
     private SQLiteDatabase database;
 
+    /**
+     * onCreate will simply initializes the content provider
+     * @param None
+     * @return boolean (did provider initialize?)
+     */
     @Override
     public boolean onCreate() {
 
+        // Create DataBaseOpner object to initialize content
+        // provider
         DataBaseOpener helper = new DataBaseOpener(getContext());
         database = helper.getWritableDatabase();
         return true;
     }
 
+    /**
+     * Query will return cursor back to caller,
+     * @param Uri, String[], String selection, Bundle, CancellationSignal
+     * @return Cursor
+     */
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         return database.query(DataBaseOpener.TABLE_NOTES, DataBaseOpener.ALL_COLUMNS, selection, null, null, null, DataBaseOpener.NOTE_CREATED + " DESC");
     }
 
+    /**
+     * Returns MIMI type of data in content provider
+     * @param Uri
+     * @return String (MIMI data type)
+     */
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
         return null;
     }
 
+    /**
+     * Inserts new data into content provider
+     * @param Uri, ContentValue
+     * @return Uri
+     */
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
@@ -60,11 +87,21 @@ public class DataBaseProvider extends ContentProvider {
         return Uri.parse(BASE_PATH + "/" + id);
     }
 
+    /**
+     * Deletes data from content provider
+     * @param Uri, String value, String[]
+     * @return Integer
+     */
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         return database.delete(DataBaseOpener.TABLE_NOTES, selection, selectionArgs);
     }
 
+    /**
+     * Updates existing data in content provider
+     * @param Ure, ContentValue, String value, String[]
+     * @return Integer
+     */
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
         return database.update(DataBaseOpener.TABLE_NOTES, values, selection, selectionArgs);
