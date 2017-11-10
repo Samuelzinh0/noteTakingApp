@@ -50,6 +50,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Log.d("MainActivity", "Inserted Note " + noteUri.getLastPathSegment());
     }
 
+    /**
+     * onCreateLoader will update with id and args parameter
+     * @param int IT, Bundle args
+     * @return Loader<Cursor>
+     */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
@@ -57,6 +62,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return new CursorLoader(this, DataBaseProvider.CONTENT_URI, null, null, null, null);
     }
 
+    /**
+     * onLoadFinished will handle (update with data) when finished
+     * @param Loader<Cursor> loader, Cursor data
+     * @return void
+     */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
@@ -64,6 +74,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         cursorAdapter.swapCursor(data);
     }
 
+    /**
+     * onLoadReset will handle the reset (null)
+     * @param Loader<Cursor> loader
+     * @return void
+     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
