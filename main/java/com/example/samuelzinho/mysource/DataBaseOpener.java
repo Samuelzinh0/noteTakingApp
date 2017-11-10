@@ -28,7 +28,7 @@ public class DataBaseOpener extends SQLiteOpenHelper {
 
     // I updated the names of the constants to follow standard naming conventions for constants. NB
     public static final String TABLE_NOTES = "notes";
-    public static final String NOTE_ID = "ID";
+    public static final String NOTE_ID = "_id";
     public static final String NOTE_TEXT = "Text";
     public static final String NOTE_CREATED = "Created";
 
