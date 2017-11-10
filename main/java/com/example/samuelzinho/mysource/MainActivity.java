@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+//import android.app.LoaderManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     // Instantiate CursorAdapter object outside of scope of onCreate
     // or new Activity
     private CursorAdapter cursorAdapter;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,13 +29,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         insertNote("New Note");
 
-        Cursor cursor = getContentResolver().query(DataBaseProvider.CONTENT_URI,DataBaseOpener.ALL_COLUMNS,null,null,null,null);
+        //Cursor cursor = getContentResolver().query(DataBaseProvider.CONTENT_URI,DataBaseOpener.ALL_COLUMNS,null,null,null,null);
         String[] from = { DataBaseOpener.NOTE_TEXT };
         int[] to = {android.R.id.text1};
-        cursorAdapter = new SimpleCursorAdapter(this,android.R.layout.simple_list_item_1,cursor,from,to,0);
+        cursorAdapter = new SimpleCursorAdapter(this,android.R.layout.simple_list_item_1,null,from,to,0);
+        //cursorAdapter = new SimpleCursorAdapter(this,android.R.layout.simple_list_item_1,cursor,from,to,0);
 
         ListView list = (ListView) findViewById(android.R.id.list);
         list.setAdapter(cursorAdapter);
+
+        // this doesnt work?
+        //getLoaderManager().initLoader(0, null, this);
+
     }
 
     /**
