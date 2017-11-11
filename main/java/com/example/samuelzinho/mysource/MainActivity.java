@@ -1,22 +1,48 @@
 package com.example.samuelzinho.mysource;
 
 import android.content.ContentValues;
+//import android.database.sqlite.SQLiteDatabase;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-//import android.app.LoaderManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+//import android.provider.ContactsContract;
+import android.app.LoaderManager;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
+
+
+
+
+
+
+
+
+
+
+
+
+//import android.content.ContentValues;
+//import android.database.Cursor;
+//import android.database.sqlite.SQLiteDatabase;
+//import android.database.sqlite.SQLiteOpenHelper;
+//import android.net.Uri;
+
+//import android.support.v4.app.LoaderManager;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
+//import android.support.v7.app.AppCompatActivity;
+//import android.os.Bundle;
+//import android.util.Log;
+//import android.widget.CursorAdapter;
+//import android.widget.ListView;
+//import android.widget.SimpleCursorAdapter;
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Object> {
 
     // Instantiate CursorAdapter object outside of scope of onCreate
     // or new Activity
@@ -27,6 +53,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        insertNote("New Note");
+        insertNote("New Note");
+        insertNote("New Note");
+        insertNote("New Note");
         insertNote("New Note");
 
         //Cursor cursor = getContentResolver().query(DataBaseProvider.CONTENT_URI,DataBaseOpener.ALL_COLUMNS,null,null,null,null);
@@ -39,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         list.setAdapter(cursorAdapter);
 
         // this doesnt work?
-        //getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(0, null, this);
 
     }
 
@@ -51,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      */
     private void insertNote(String noteText){
         ContentValues values = new ContentValues();
-        values.put(DataBaseOpener.NOTE_TEXT,noteText);
+        values.put(DataBaseOpener.NOTE_TEXT, noteText);
+        //values.put(DataBaseOpener.NOTE_TEXT,noteText);
         Uri noteUri = getContentResolver().insert(DataBaseProvider.CONTENT_URI,values);
 
         Log.d("MainActivity", "Inserted Note " + noteUri.getLastPathSegment());
@@ -63,10 +94,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * @return Loader<Cursor>
      */
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public android.content.Loader<Object> onCreateLoader(int id, Bundle args) {
 
         // return new Cursor list using provider for notes database
-        return new CursorLoader(this, DataBaseProvider.CONTENT_URI, null, null, null, null);
+        return new android.content.Loader<>(this);
+
+        //return new android.content.Loader<>(this, DataBaseProvider.CONTENT_URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(android.content.Loader<Object> loader, Object data) {
+        cursorAdapter.swapCursor((Cursor) data);
+    }
+
+    @Override
+    public void onLoaderReset(android.content.Loader<Object> loader) {
+        cursorAdapter.swapCursor(null);
     }
 
     /**
@@ -74,22 +117,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
      * @param Loader<Cursor> loader, Cursor data
      * @return void
      */
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+   // @Override
+  //  public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
 
-        // cursor for when finished
-        cursorAdapter.swapCursor(data);
-    }
+  //      // cursor for when finished
+ //       cursorAdapter.swapCursor(data);
+ //   }
 
     /**
      * onLoadReset will handle the reset (null)
      * @param Loader<Cursor> loader
      * @return void
      */
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    //@Override
+   // public void onLoaderReset(Loader<Cursor> loader) {
 
-        // cursor for reset (uses null)
-        cursorAdapter.swapCursor(null);
-    }
+     //   // cursor for reset (uses null)
+    //    cursorAdapter.swapCursor(null);
+ //   }
 }
