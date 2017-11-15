@@ -1,6 +1,7 @@
 package com.example.samuelzinho.mysource;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,12 +10,16 @@ import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -41,6 +46,61 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // this doesnt work?
         //getLoaderManager().initLoader(0, null, this);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        return true;
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_create_sample:
+                insertSampleData();
+                break;
+            case R.id.action_delete_all:
+                deleteAllNotes();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteAllNotes() {
+        // Ask for confirmation to delete all notes.
+        DialogInterface.OnClickListener dialogClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int button) {
+                        if (button == DialogInterface.BUTTON_POSITIVE) {
+                            // If the user clicks 'yes', this will run.
+                            getContentResolver().delete(DataBaseProvider.CONTENT_URI, null, null);
+
+                            //restartLoader();
+
+                            getContentResolver().delete(DataBaseProvider.CONTENT_URI, null, null);
+
+                            //restartLoader();
+
+                            Toast.makeText(MainActivity.this, getString(R.string.all_deleted), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.are_you_sure))
+                .setPositiveButton(getString(android.R.string.yes), dialogClickListener)
+                .setNegativeButton(getString(android.R.string.no), dialogClickListener)
+                .show();
+    }
+
+    private void insertSampleData() {
+        insertNote("Sample Note");
+        insertNote("Multi-Line\nNote");
+        insertNote("Very long note with a lot of text that exceeds the width of the screen");
     }
 
     /**

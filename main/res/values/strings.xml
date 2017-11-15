@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">My Source</string>
+    <string name="create_sample_data">create sample data</string>
+    <string name="delete_sample_data">delete sample data</string>
+    <string name="delete_all_notes">delete all notes</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="all_deleted">All Deleted!</string>
 </resources>
