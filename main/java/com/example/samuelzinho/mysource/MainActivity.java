@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /**
      * onCreateLoader will update with id and args parameter
-     * @param int IT, Bundle args
+     * @param id, Bundle args
      * @return Loader<Cursor>
      */
     @Override
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /**
      * onLoadFinished will handle (update with data) when finished
-     * @param Loader<Cursor> loader, Cursor data
+     * @param loader<Cursor> loader, Cursor data
      * @return void
      */
     @Override
@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     /**
      * onLoadReset will handle the reset (null)
-     * @param Loader<Cursor> loader
+     * @param loader<Cursor> loader
      * @return void
      */
     @Override

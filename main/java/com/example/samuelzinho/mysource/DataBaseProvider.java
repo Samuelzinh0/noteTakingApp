@@ -40,7 +40,6 @@ public class DataBaseProvider extends ContentProvider {
 
     /**
      * onCreate will simply initializes the content provider
-     * @param None
      * @return boolean (did provider initialize?)
      */
     @Override
@@ -55,7 +54,7 @@ public class DataBaseProvider extends ContentProvider {
 
     /**
      * Query will return cursor back to caller,
-     * @param Uri, String[], String selection, Bundle, CancellationSignal
+     * @param uri, String[], String selection, Bundle, CancellationSignal
      * @return Cursor
      */
     @Nullable
@@ -66,7 +65,7 @@ public class DataBaseProvider extends ContentProvider {
 
     /**
      * Returns MIMI type of data in content provider
-     * @param Uri
+     * @param uri
      * @return String (MIMI data type)
      */
     @Nullable
@@ -77,7 +76,7 @@ public class DataBaseProvider extends ContentProvider {
 
     /**
      * Inserts new data into content provider
-     * @param Uri, ContentValue
+     * @param uri, ContentValue
      * @return Uri
      */
     @Nullable
@@ -89,7 +88,7 @@ public class DataBaseProvider extends ContentProvider {
 
     /**
      * Deletes data from content provider
-     * @param Uri, String value, String[]
+     * @param uri, String value, String[]
      * @return Integer
      */
     @Override
@@ -99,7 +98,7 @@ public class DataBaseProvider extends ContentProvider {
 
     /**
      * Updates existing data in content provider
-     * @param Ure, ContentValue, String value, String[]
+     * @param uri, ContentValue, String value, String[]
      * @return Integer
      */
     @Override
