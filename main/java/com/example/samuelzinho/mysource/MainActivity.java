@@ -70,8 +70,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     /**
-     * 
-     * @param item
+     * This is our opOptionsItemSelected function and it will return and make sure to see if
+     * any of the items in the selection menu were actually selected.
+     * @param item returns the item of the menu to see if it was selected
      * @return boolean
      */
     @Override public boolean onOptionsItemSelected(MenuItem item) {
