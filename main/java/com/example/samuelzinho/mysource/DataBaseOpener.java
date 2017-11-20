@@ -13,13 +13,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DataBaseOpener extends SQLiteOpenHelper {
 
     /**
-     * Here I am creating just the implementation of the onCreate function and
-     * onUpgrade function in order for oue DataBaseOpener class to work. I will
-     * also be declaring the right constants for our database.
-     * @param sqLiteDatabase
-     */
-
-    /**
      * I will now add the constants for our database and this will determine
      * the characteristics of our database.
      */
@@ -44,15 +37,33 @@ public class DataBaseOpener extends SQLiteOpenHelper {
                     NOTE_CREATED + " TEXT default CURRENT_TIMESTAMP" +
                     ")";
 
+    /**
+     * For this function we will be using the super function to call its parent class.
+     * @param context passing in context into this function
+     */
     public DataBaseOpener(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Here I am creating just the implementation of the onCreate function and
+     * onUpgrade function in order for oue DataBaseOpener class to work. I will
+     * also be declaring the right constants for our database.
+     * @param sqLiteDatabase passing in the Database object
+     */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(TABLE_CREATE);
     }
 
+    /**
+     * This function will be upgrading our DataBase and will call the execSQL method from the
+     * sqLiteDatabase object. And then I will be calling the onCreate function to create the
+     * Database with its updated values.
+     * @param sqLiteDatabase passing in the Database object
+     * @param i this will be used as an increment
+     * @param i1 this will be used as an increment
+     */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NOTES);

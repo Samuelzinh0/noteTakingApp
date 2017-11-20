@@ -45,15 +45,14 @@ public class DataBaseProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
 
-        // Create DataBaseOpner object to initialize content
-        // provider
+        // Create DataBaseOpener object to initialize content provider
         DataBaseOpener helper = new DataBaseOpener(getContext());
         database = helper.getWritableDatabase();
         return true;
     }
 
     /**
-     * Query will return cursor back to caller,
+     * Query will return cursor back to caller.
      * @param uri, String[], String selection, Bundle, CancellationSignal
      * @return Cursor
      */
@@ -64,7 +63,7 @@ public class DataBaseProvider extends ContentProvider {
     }
 
     /**
-     * Returns MIMI type of data in content provider
+     * Returns MIMI type of data in content provider.
      * @param uri
      * @return String (MIMI data type)
      */
@@ -75,7 +74,7 @@ public class DataBaseProvider extends ContentProvider {
     }
 
     /**
-     * Inserts new data into content provider
+     * Inserts new data into content provider.
      * @param uri, ContentValue
      * @return Uri
      */
@@ -87,7 +86,7 @@ public class DataBaseProvider extends ContentProvider {
     }
 
     /**
-     * Deletes data from content provider
+     * Deletes data from content provider.
      * @param uri, String value, String[]
      * @return Integer
      */
@@ -97,7 +96,7 @@ public class DataBaseProvider extends ContentProvider {
     }
 
     /**
-     * Updates existing data in content provider
+     * Updates existing data in content provider.
      * @param uri, ContentValue, String value, String[]
      * @return Integer
      */

@@ -21,12 +21,20 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+/**
+ * This will be our MainActivity for our project. This is the driver code for our application.
+ */
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     // Instantiate CursorAdapter object outside of scope of onCreate
     // or new Activity
     private CursorAdapter cursorAdapter;
-    
+
+    /**
+     * This is our onCreate function and will run and execute the creation of the activities
+     * in our applications.
+     * @param savedInstanceState this provides the instance of our application
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +56,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+    /**
+     * This is our onCreateOptionsMenu and it will call the menu inflater function and it will
+     * return the menu of our application.
+     * @param menu we are passing our menu on the top right corner of the screen
+     * @return boolean
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -55,6 +69,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
+    /**
+     * 
+     * @param item
+     * @return boolean
+     */
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
@@ -69,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This function will be called and it will then proceed to delete all of the notes in the
+     * application.
+     */
     private void deleteAllNotes() {
         // Ask for confirmation to delete all notes.
         DialogInterface.OnClickListener dialogClickListener =
@@ -97,6 +120,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 .show();
     }
 
+    /**
+     * This will be an insertSampleData to test our Database with different kinds of notes.
+     */
     private void insertSampleData() {
         insertNote("Sample Note");
         insertNote("Multi-Line\nNote");
