@@ -59,7 +59,13 @@ public class DataBaseProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return database.query(DataBaseOpener.TABLE_NOTES, DataBaseOpener.ALL_COLUMNS, selection, null, null, null, DataBaseOpener.NOTE_CREATED + " DESC");
+        if (uriMatcher.match(uri) == NOTES_ID){
+            selection = DataBaseOpener.NOTE_ID + "=" + uri.getLastPathSegment();
+        }
+
+        return database.query(DataBaseOpener.TABLE_NOTES, DataBaseOpener.ALL_COLUMNS,
+                selection, null, null, null,
+                DataBaseOpener.NOTE_CREATED + " DESC");
     }
 
     /**
