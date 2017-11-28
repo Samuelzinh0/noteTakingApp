@@ -21,6 +21,14 @@
             android:authorities="com.example.samuelzinho.mysource.DataBaseProvider"
             android:name=".DataBaseProvider"
             android:exported="false" />
+        <activity
+            android:name=".EditorActivity"
+            android:label="EditorActivity"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.samuelzinho.mysource.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

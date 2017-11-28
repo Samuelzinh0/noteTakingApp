@@ -1,82 +1,77 @@
 package com.example.samuelzinho.mysource;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.DatabaseErrorHandler;
 import android.net.Uri;
-//import android.app.LoaderManager;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
+import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-/**
- * This will be our MainActivity for our project. This is the driver code for our application.
- */
+import com.example.samuelzinho.mysource.EditorActivity;
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    // Instantiate CursorAdapter object outside of scope of onCreate
-    // or new Activity
+    private static final int EDITOR_REQUEST_CODE = 999;
     private CursorAdapter cursorAdapter;
 
-    /**
-     * This is our onCreate function and will run and execute the creation of the activities
-     * in our applications.
-     * @param savedInstanceState this provides the instance of our application
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        insertNote("New Note");
-
-        //Cursor cursor = getContentResolver().query(DataBaseProvider.CONTENT_URI,DataBaseOpener.ALL_COLUMNS,null,null,null,null);
-        String[] from = { DataBaseOpener.NOTE_TEXT };
-        int[] to = {android.R.id.text1};
-        cursorAdapter = new SimpleCursorAdapter(this,android.R.layout.simple_list_item_1,null,from,to,0);
-        //cursorAdapter = new SimpleCursorAdapter(this,android.R.layout.simple_list_item_1,cursor,from,to,0);
+        cursorAdapter = new NotesCursorAdapter(this, null, 0);
 
         ListView list = (ListView) findViewById(android.R.id.list);
         list.setAdapter(cursorAdapter);
 
-        // this doesnt work?
-        //getLoaderManager().initLoader(0, null, this);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+                Uri uri = Uri.parse(DataBaseProvider.CONTENT_URI + "/" + l);
+                intent.putExtra(DataBaseProvider.CONTENT_ITEM_TYPE, uri);
+                startActivityForResult(intent, EDITOR_REQUEST_CODE);
+            }
+        });
 
+        getLoaderManager().initLoader(0, null, this);
     }
 
-    /**
-     * This is our onCreateOptionsMenu and it will call the menu inflater function and it will
-     * return the menu of our application.
-     * @param menu we are passing our menu on the top right corner of the screen
-     * @return boolean
-     */
+    private void insertNote(String noteText) {
+        ContentValues values = new ContentValues();
+        values.put(DataBaseOpener.NOTE_TEXT, noteText);
+        Uri noteUri = getContentResolver().insert(DataBaseProvider.CONTENT_URI,
+                values);
+
+        Log.d("MainActivity", "Inserted note " + noteUri.getLastPathSegment());
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-
         return true;
     }
 
-    /**
-     * This is our opOptionsItemSelected function and it will return and make sure to see if
-     * any of the items in the selection menu were actually selected.
-     * @param item returns the item of the menu to see if it was selected
-     * @return boolean
-     */
-    @Override public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
+
         switch (id) {
             case R.id.action_create_sample:
                 insertSampleData();
@@ -85,31 +80,24 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 deleteAllNotes();
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * This function will be called and it will then proceed to delete all of the notes in the
-     * application.
-     */
     private void deleteAllNotes() {
-        // Ask for confirmation to delete all notes.
         DialogInterface.OnClickListener dialogClickListener =
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int button) {
                         if (button == DialogInterface.BUTTON_POSITIVE) {
-                            // If the user clicks 'yes', this will run.
-                            getContentResolver().delete(DataBaseProvider.CONTENT_URI, null, null);
+                            //Insert Data management code here
+                            getContentResolver().delete(
+                                    DataBaseProvider.CONTENT_URI, null, null
+                            );
+                            restartLoader();
 
-                            //restartLoader();
-
-                            getContentResolver().delete(DataBaseProvider.CONTENT_URI, null, null);
-
-                            //restartLoader();
-
-                            Toast.makeText(MainActivity.this, getString(R.string.all_deleted), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this,
+                                    getString(R.string.all_deleted),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 };
@@ -121,62 +109,43 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 .show();
     }
 
-    /**
-     * This will be an insertSampleData to test our Database with different kinds of notes.
-     */
     private void insertSampleData() {
-        insertNote("Sample Note");
-        insertNote("Multi-Line\nNote");
-        insertNote("Very long note with a lot of text that exceeds the width of the screen");
+        insertNote("Simple Note.");
+        insertNote("Multi-line\nnote");
+
+        restartLoader();
     }
 
-    /**
-     * This will be my method to insert a new note to our application. We will be
-     * using a values object. We will call the put method in order to insert a new note.
-     * We will also be using the Uri class here to identify a resource.
-     * @param noteText
-     */
-    private void insertNote(String noteText){
-        ContentValues values = new ContentValues();
-        values.put(DataBaseOpener.NOTE_TEXT,noteText);
-        Uri noteUri = getContentResolver().insert(DataBaseProvider.CONTENT_URI,values);
-
-        Log.d("MainActivity", "Inserted Note " + noteUri.getLastPathSegment());
+    private void restartLoader() {
+        getLoaderManager().restartLoader(0, null, this);
     }
 
-    /**
-     * onCreateLoader will update with id and args parameter
-     * @param id, Bundle args
-     * @return Loader<Cursor>
-     */
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        // return new Cursor list using provider for notes database
-        return new CursorLoader(this, DataBaseProvider.CONTENT_URI, null, null, null, null);
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        return new CursorLoader(this, DataBaseProvider.CONTENT_URI,
+                null, null, null,null);
     }
 
-    /**
-     * onLoadFinished will handle (update with data) when finished
-     * @param loader<Cursor> loader, Cursor data
-     * @return void
-     */
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
-        // cursor for when finished
-        cursorAdapter.swapCursor(data);
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        cursorAdapter.swapCursor(cursor);
     }
 
-    /**
-     * onLoadReset will handle the reset (null)
-     * @param loader<Cursor> loader
-     * @return void
-     */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
-        // cursor for reset (uses null)
         cursorAdapter.swapCursor(null);
+    }
+
+    public void openEditorNewNote(View view) {
+        Intent intent = new Intent(this, EditorActivity.class);
+        startActivityForResult(intent, EDITOR_REQUEST_CODE);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
+            restartLoader();
+        }
     }
 }
