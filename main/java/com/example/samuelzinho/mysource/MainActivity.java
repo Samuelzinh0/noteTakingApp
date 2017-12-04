@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.example.samuelzinho.mysource.EditorActivity;
 
+/**added comment to test git push and git pull - Tim Whitlock on 12/04/2017**/
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int EDITOR_REQUEST_CODE = 999;
