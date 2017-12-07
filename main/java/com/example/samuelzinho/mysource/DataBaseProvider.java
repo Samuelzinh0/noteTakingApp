@@ -21,23 +21,28 @@ import android.support.annotation.Nullable;
 
 public class DataBaseProvider extends ContentProvider {
 
+    // Authorizes unique app to be downloaded to user phone/tablet
     private static final String AUTHORITY = "com.example.samuelzinho.mysource.DataBaseProvider";
     private static final String BASE_PATH = "notes";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
 
+    // Classifies database provider type (string of notes)
     public static final String CONTENT_ITEM_TYPE = "Notes";
 
-    // Identifies the requested operation
-    private static final int NOTES = 1;
-    private static final int NOTES_ID = 2;
+    // Constant to identify the requested operation
+    private static final int NOTES = 1;     // give the data
+    private static final int NOTES_ID = 2;  // work with single record
 
+    // Variable to parse table (uriMatcher)
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+    // static initializer to call URI matcher first, anytime NotesProvider is called
     static {
         uriMatcher.addURI(AUTHORITY,BASE_PATH,NOTES);
         uriMatcher.addURI(AUTHORITY,BASE_PATH + "/#",NOTES_ID);
     }
 
+    // declaration for SQLite db, to be used for all CRUD methods
     private SQLiteDatabase database;
 
     /**
@@ -47,7 +52,7 @@ public class DataBaseProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
 
-        // Create DataBaseOpener object to initialize content provider
+        // new SQLite database created
         DataBaseOpener helper = new DataBaseOpener(getContext());
         database = helper.getWritableDatabase();
         return true;
@@ -89,6 +94,8 @@ public class DataBaseProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+
+        // id variable, returns row and key pair as id num
         long id = database.insert(DataBaseOpener.TABLE_NOTES, null, values);
         return Uri.parse(BASE_PATH + "/" + id);
     }
