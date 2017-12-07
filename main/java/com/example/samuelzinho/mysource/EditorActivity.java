@@ -20,6 +20,7 @@ import android.widget.Toast;
  */
 public class EditorActivity extends AppCompatActivity {
 
+    // variables used for edit activity for SQLite database functions
     private String action;
     private EditText editor;
     private String noteFilter;
@@ -34,17 +35,24 @@ public class EditorActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
+        // sets editor to viewWindow
         editor = (EditText) findViewById(R.id.editText);
 
+        // Set up intent
         Intent intent = getIntent();
 
+        // parses the databaseProvider for content type (string of notes)
         Uri uri = intent.getParcelableExtra(DataBaseProvider.CONTENT_ITEM_TYPE);
 
+        // If no address to databaseProvider then set up intent for new
+        // note creation
         if (uri == null){
             action = Intent.ACTION_INSERT;
             setTitle(getString(R.string.new_note));
-
         }
+
+        // If address is valid through URI, then note already exists. User must
+        // edit note
         else{
             action = Intent.ACTION_EDIT;
             noteFilter = DataBaseOpener.NOTE_ID + "=" + uri.getLastPathSegment();
@@ -111,22 +119,37 @@ public class EditorActivity extends AppCompatActivity {
     private void finishEditing() {
         String newText = editor.getText().toString().trim();
 
+        // logic to handle edit activity circumstances so app
+        // does not hang up
         switch(action){
             case Intent.ACTION_INSERT:
+
+                // If nothing entered for new note, cancel the operation
                 if (newText.length() ==  0){
                     setResult(RESULT_CANCELED);
                 }
+
+                // Note was edited, update and save
                 else{
                     insertNote(newText);
                 }
                 break;
+
+
             case Intent.ACTION_EDIT:
+
+                // If note was not editied, then delete cancel and
+                // delete operation for edit note
                 if(newText.length() == 0){
                     deleteNote();
                 }
+
+                // If old text == new text, then cancel operation
                 else if (oldText.equals(newText)) {
                     setResult(RESULT_CANCELED);
                 }
+
+                // If edited, then put and save
                 else {
                     updateNote(newText);
                 }
