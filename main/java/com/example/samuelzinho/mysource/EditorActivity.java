@@ -14,6 +14,10 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * Editor Activity will control all aspects to edit, delete and save notes
+ * previous or new.
+ */
 public class EditorActivity extends AppCompatActivity {
 
     private String action;
@@ -21,6 +25,10 @@ public class EditorActivity extends AppCompatActivity {
     private String noteFilter;
     private String oldText;
 
+    /**
+     * Sets up edit activity when New note button is pushed from main activity
+     * @param savedInstanceState Saved instance from previous activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +58,12 @@ public class EditorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Enables the option menu in top right corner of edit activity
+     * @param menu Data that hold user actions to create sample data
+     *             and deletion of all notes
+     * @return Always available in edit activity
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (action.equals(Intent.ACTION_EDIT)){
@@ -58,6 +72,12 @@ public class EditorActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * List the option user has from option menu - create sample data
+     * and delete all notes
+     * @param item Lets user choose 1 of 2 option items for edit activity
+     * @return Always available to edit activity
+     */
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
 
@@ -72,6 +92,10 @@ public class EditorActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Allows user to delete a selected note. Appears in the Editor Activity
+     * after deletion notifies user of deleted note.
+     */
     private void deleteNote() {
         getContentResolver().delete(DataBaseProvider.CONTENT_URI,
                 noteFilter, null);
@@ -80,6 +104,10 @@ public class EditorActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * User pushes back button in Editor Activity to save the note in a saved
+     * persistance state, in this case a SQLite Database
+     */
     private void finishEditing() {
         String newText = editor.getText().toString().trim();
 
@@ -106,6 +134,10 @@ public class EditorActivity extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * If user updates note on Editor activity allows note to be edited
+     * @param noteText previous note text that existed in SQLite database
+     */
     private void updateNote(String noteText) {
         ContentValues values = new ContentValues();
         values.put(DataBaseOpener.NOTE_TEXT, noteText);
@@ -114,6 +146,11 @@ public class EditorActivity extends AppCompatActivity {
         setResult(RESULT_OK);
     }
 
+    /**
+     * Works with updateNote, but insertNote takes action to insert (save persistance)
+     * new text into previous saved SQLite database
+     * @param noteText previous note text that existed in SQLite database
+     */
     private void insertNote(String noteText) {
         ContentValues values = new ContentValues();
         values.put(DataBaseOpener.NOTE_TEXT, noteText);
@@ -121,6 +158,9 @@ public class EditorActivity extends AppCompatActivity {
         setResult(RESULT_OK);
     }
 
+    /**
+     * When the backbutton is pushed edit activity is done with editing
+     */
     @Override
     public void onBackPressed() {
         finishEditing();
