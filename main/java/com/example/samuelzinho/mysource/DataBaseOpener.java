@@ -66,7 +66,11 @@ public class DataBaseOpener extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+
+        // drop SQLite database table if already exists
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NOTES);
+
+        // recreate SQLite database table structure
         onCreate(sqLiteDatabase);
     }
 }
